@@ -1,0 +1,37 @@
+Travnik {'Linearna regresija': np.float64(1285.8), 'Gradijentno pojačanje': np.float64(1249.6), 'MLP': np.float64(1142.4), 'LSTM': np.float64(1218.8)} PVGIS 1228.39 PVGIS*q 1116.9 ood 8.14
+Sarajevo {'Linearna regresija': np.float64(1256.5), 'Gradijentno pojačanje': np.float64(1220.2), 'MLP': np.float64(1115.9), 'LSTM': np.float64(1190.5)} PVGIS 1201.44 PVGIS*q 1092.4 ood 9.95
+Mostar {'Linearna regresija': np.float64(1331.6), 'Gradijentno pojačanje': np.float64(1275.2), 'MLP': np.float64(1157.0), 'LSTM': np.float64(1244.1)} PVGIS 1409.86 PVGIS*q 1281.9 ood 7.96
+Banja Luka {'Linearna regresija': np.float64(1180.9), 'Gradijentno pojačanje': np.float64(1152.4), 'MLP': np.float64(1056.0), 'LSTM': np.float64(1120.8)} PVGIS 1187.54 PVGIS*q 1079.8 ood 8.49
+Tuzla {'Linearna regresija': np.float64(1235.8), 'Gradijentno pojačanje': np.float64(1213.7), 'MLP': np.float64(1106.4), 'LSTM': np.float64(1205.5)} PVGIS 1186.47 PVGIS*q 1078.8 ood 10.98
+Bihac {'Linearna regresija': np.float64(1145.4), 'Gradijentno pojačanje': np.float64(1111.3), 'MLP': np.float64(1021.9), 'LSTM': np.float64(1089.8)} PVGIS 1169.21 PVGIS*q 1063.1 ood 7.39
+Trebinje {'Linearna regresija': np.float64(1382.9), 'Gradijentno pojačanje': np.float64(1330.8), 'MLP': np.float64(1206.2), 'LSTM': np.float64(1300.7)} PVGIS 1434.1 PVGIS*q 1304.0 ood 8.28
+{
+ "Linearna regresija": {
+  "MAPE_vs_PVGISq": 10.246282485480574,
+  "rel_err_pct": 9.093965662009193,
+  "r_cities": 0.8861811860114208,
+  "r_monthly_mean": 0.9792846642716005,
+  "Limburg_model_mean": 956.8590526089072
+ },
+ "Gradijentno pojačanje": {
+  "MAPE_vs_PVGISq": 7.132465197146459,
+  "rel_err_pct": 6.529782073550182,
+  "r_cities": 0.8400816656112288,
+  "r_monthly_mean": 0.9853681623859513,
+  "Limburg_model_mean": 954.1777655665703
+ },
+ "MLP": {
+  "MAPE_vs_PVGISq": 4.329804890435261,
+  "rel_err_pct": 5.28235173322342,
+  "r_cities": 0.8264207137305202,
+  "r_monthly_mean": 0.9807984584050731,
+  "Limburg_model_mean": 893.9514066495001
+ },
+ "LSTM": {
+  "MAPE_vs_PVGISq": 5.621451478910947,
+  "rel_err_pct": 6.315665814881653,
+  "r_cities": 0.8139780375365951,
+  "r_monthly_mean": 0.9840927968869622,
+  "Limburg_model_mean": 937.535185110569
+ }
+} q 0.9092686009891914 meas 946.8577649540845
