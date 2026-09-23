@@ -1,0 +1,124 @@
+<!-- =====================================================================
+     body_main.html - STRUKTURA STRANICE (HTML)
+     Ovdje su samo "prazni" elementi: polja, dugmad i SVG površine za grafikone.
+     Sadržaj (brojeve, linije, tabele) popunjava app.js preko id-ova elemenata,
+     npr. id="loc" je izbor lokacije, id="chart" je grafikon satne snage.
+     Svaka kartica je jedna <section>; dugmad u <nav class="tabs"> ih prikazuju/skrivaju.
+     ===================================================================== -->
+
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <svg class="logo" viewBox="10 1 80 79" role="img" aria-label="Solmetar logo"><circle cx="50" cy="40" r="38" fill="#E9AB45"/><polygon points="31,43 69,43 78.5,78 21.5,78" fill="#2B5078"/><g stroke="var(--logo-gap)" stroke-width="2" stroke-linecap="butt"><line x1="26.3" y1="60.5" x2="73.7" y2="60.5"/><line x1="43.7" y1="43" x2="40.5" y2="78"/><line x1="56.3" y1="43" x2="59.5" y2="78"/></g></svg>
+    <h1><span>Sol</span>metar</h1>
+    <p>Procjena satne proizvodnje fotonaponskih sistema neuronskim mrežama na osnovu vremenskih podataka. Pokazna aplikacija završnog rada.</p>
+  </div>
+  <div class="sys" id="sysinfo">modeli naučeni na mjerenjima iz Limburga (Belgija) · vremenski podaci Open-Meteo · lokalno vrijeme (CET/CEST)</div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" id="t-dan" aria-selected="true" data-view="v-dan">Procjena za dan</button>
+  <button role="tab" id="t-god" aria-selected="false" data-view="v-god">Godišnja proizvodnja</button>
+  <button role="tab" id="t-eval" aria-selected="false" data-view="v-eval">Evaluacija i provjera</button>
+  <button role="tab" id="t-o" aria-selected="false" data-view="v-o">O modelima</button>
+</nav>
+
+<!-- ================= DAN ================= -->
+<section id="v-dan">
+<div class="grid">
+  <aside class="panel">
+    <h3>Lokacija i sistem</h3>
+    <label for="loc">Lokacija</label>
+    <select id="loc"></select>
+    <div style="margin-top:10px">
+      <label for="psize" id="psize-lab">Instalirana snaga sistema</label>
+      <div class="unitrow">
+        <input type="number" id="psize" min="0.1" step="0.1" value="10">
+        <select id="punit" aria-label="Jedinica"><option value="kW">kWp</option><option value="MW">MWp</option></select>
+      </div>
+      <p class="note" id="psize-note"></p>
+    </div>
+    <h3>Dan</h3>
+    <div class="row">
+      <button class="btn" id="prev" aria-label="Prethodni dan">‹</button>
+      <input type="date" id="date">
+      <button class="btn" id="next" aria-label="Sljedeći dan">›</button>
+    </div>
+    <div class="row" style="margin-top:8px;flex-wrap:wrap">
+      <button class="btn" id="today">Danas</button>
+      <button class="btn" id="live" title="Preuzmi najnovije podatke sa Open-Meteo">Osvježi uživo</button>
+    </div>
+    <div class="src" id="src"></div>
+    <h3>Prikaz</h3>
+    <div class="checks" id="checks"></div>
+    <h3>Scenario "šta ako" <span class="chip warn" id="scen-chip" hidden>aktivan</span></h3>
+    <div class="slider"><div class="lab"><span>Zračenje G, G<sub>b</sub>, G<sub>d</sub></span><b id="o-g">100 %</b></div><input type="range" id="s-g" min="0" max="150" step="5" value="100"></div>
+    <div class="slider"><div class="lab"><span>Temperatura T<sub>a</sub></span><b id="o-t">+0 °C</b></div><input type="range" id="s-t" min="-15" max="15" step="1" value="0"></div>
+    <div class="slider"><div class="lab"><span>Oblačnost C</span><b id="o-c">+0 p.p.</b></div><input type="range" id="s-c" min="-60" max="60" step="5" value="0"></div>
+    <button class="btn" id="reset">Vrati stvarne uslove</button>
+    <p class="note">Scenario mijenja ulaze modela za cijeli dan i njegov 24-satni prozor; blijede linije su procjene za stvarne uslove. Pokazuje osjetljivost naučenih modela, a ne fizičku simulaciju.</p>
+  </aside>
+
+  <div>
+    <div class="msg" id="msg" hidden></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="panel">
+      <h2 id="chart-title">Satna snaga</h2>
+      <svg class="chart" id="chart" viewBox="0 0 760 320" role="img" aria-label="Satna procijenjena snaga"></svg>
+      <div class="legend" id="legend"></div>
+      <details id="det">
+        <summary>Satni vremenski podaci i procjene</summary>
+        <div class="tablewrap"><table id="htable"></table></div>
+      </details>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ================= GODINA ================= -->
+<section id="v-god" hidden>
+<div class="panel">
+  <h2>Godišnja i mjesečna proizvodnja</h2>
+  <div class="form" style="grid-template-columns:repeat(3,minmax(0,1fr));max-width:720px">
+    <div><label for="yloc">Lokacija</label><select id="yloc"></select></div>
+    <div><label for="year">Godina</label><select id="year"></select></div>
+    <div><label>&nbsp;</label><button class="btn primary" id="yrun">Izračunaj</button></div>
+  </div>
+  <p class="note">MLP mreža procjenjuje svaki sat izabrane godine iz vremenskih podataka Open-Meteo, direktno u pregledaču. Rezultat se poredi sa PVGIS procjenom (Evropska komisija, JRC) za sistem od 1 kWp pod optimalnim uglom, koja je nezavisna od modela. Za Limburg je prikazana i izmjerena proizvodnja.</p>
+  <div class="kpis" id="ykpis" style="margin-top:12px"></div>
+  <svg class="chart" id="ychart" viewBox="0 0 760 260" role="img" aria-label="Mjesečna proizvodnja"></svg>
+  <div class="legend" id="ylegend"></div>
+  <h3 style="margin-top:18px">Sve lokacije: prosjek 2021-2025. (kWh po kWp godišnje)</h3>
+  <div class="tablewrap"><table id="ttable"></table></div>
+</div>
+</section>
+
+<!-- ================= EVALUACIJA ================= -->
+<section id="v-eval" hidden>
+<div class="panel">
+  <h2>Tačnost na testnom periodu i provjera implementacije</h2>
+  <p class="note">Aplikacija ponovo izračunava procjene za sve sate testnog perioda u Limburgu (1.7.2025. - 21.9.2026.) direktno u pregledaču, poredi ih sa izmjerenom proizvodnjom i prognozom operatora Elia, te sa procjenama Python/PyTorch implementacije (peta cjelina rada).</p>
+  <div class="row" style="margin-top:12px"><button class="btn primary" id="run">Pokreni evaluaciju</button><span class="note" id="runinfo" style="margin:0"></span></div>
+  <div class="progress"><i id="bar"></i></div>
+  <div class="tablewrap"><table id="etable"></table></div>
+  <h3 style="margin-top:18px">Mjesečna specifična proizvodnja u Limburgu (kWh po kWp)</h3>
+  <svg class="chart" id="mchart" viewBox="0 0 760 260" role="img" aria-label="Mjesečna proizvodnja"></svg>
+  <div class="legend" id="mlegend"></div>
+</div>
+</section>
+
+<!-- ================= O MODELIMA ================= -->
+<section id="v-o" hidden>
+<div class="panel prose">
+  <h2>O modelima i podacima</h2>
+  <p><b>Izvor podataka o proizvodnji.</b> Izmjerena satna proizvodnja svih fotonaponskih elektrana u provinciji Limburg (Belgija) iz otvorenih podataka operatora prenosnog sistema Elia, 1.1.2021. - 21.9.2026., sa praćenom instaliranom snagom od 710 do 1.565 MW. Ciljna veličina je faktor iskorištenja κ = P / P<sub>nom</sub>, udio instalirane (nazivne) snage P<sub>nom</sub>, pa se procjena za bilo koji sistem dobija množenjem sa njegovom snagom.</p>
+  <p><b>Vremenski podaci.</b> Open-Meteo (arhiva operativnih prognoza numeričkih modela): globalno, direktno i difuzno zračenje, direktno normalno zračenje, temperatura, vlažnost, vjetar, padavine, snijeg i oblačnost. Za Limburg se koristi prosjek četiri tačke u provinciji, a za gradove u BiH tačka u gradu.</p>
+  <p><b>Ulazi (K = 18).</b> Deset meteoroloških veličina, četiri geometrijske veličine izračunate iz položaja Sunca za datu lokaciju (srednji cos θ<sub>z</sub>, vanatmosfersko zračenje G<sub>0</sub>, udio sata sa Suncem f<sub>sun</sub>, sin ω), indeks prozračnosti k<sub>t</sub>, snijeg u posljednja 72 sata i zračenje susjednih sati. Nijedan ulaz ne zavisi od lokacije direktno, pa se model može primijeniti i izvan Limburga.</p>
+  <p><b>Modeli.</b> Linearna regresija sa L2 regularizacijom, MLP i LSTM mreža (prozor od 24 sata), izabrani na validacionom periodu i ponovo trenirani na periodu 1.1.2021. - 30.6.2025. Izlaz je ograničen na [0, 1], a noću je procjena 0.</p>
+  <p><b>Kako radi aplikacija.</b> Težine mreža izvezene su iz PyTorcha i ugrađene u stranicu, zajedno sa satnim vremenskim podacima za sve lokacije od 1.1.2021. do dana izrade. Prolaz unaprijed izvršava se u JavaScriptu. Za datume poslije toga, uključujući današnji i sljedećih sedam dana, aplikacija preuzima podatke sa Open-Meteo kada je internet veza dostupna.</p>
+  <p><b>Ograničenja.</b> Modeli su naučeni na podacima fotonaponskih elektrana različite orijentacije u Limburgu, pa procjena za BiH odgovara prosječnom takvom sistemu, a ne sistemu pod optimalnim uglom. Vremenski podaci su procjene numeričkog modela, a ne mjerenja na lokaciji. Nagle promjene rada sistema (kvar, isključenje, ograničenje proizvodnje zbog tržišta) nisu vidljive iz vremenskih podataka.</p>
+</div>
+</section>
+
+<footer>Solmetar · završni rad "Neuronske mreže za procjenu proizvodnje solarne energije na osnovu vremenskih podataka", Univerzitet u Travniku, 2026. · Podaci: Elia Open Data, Open-Meteo (CC BY 4.0), PVGIS (JRC).</footer>
+</div>
